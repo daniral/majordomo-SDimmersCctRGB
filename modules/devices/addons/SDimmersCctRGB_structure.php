@@ -85,10 +85,10 @@ if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SDimmersCctRGB_' . S
 }
 
 $this->device_types['dimmerCctRGB'] = array(
-	'TITLE' => 'Освещение(Диммер RGB)',
+	'TITLE' => 'Освещение(Диммер CCT RGB)',
 	'PARENT_CLASS' => 'SControllers',
 	'CLASS' => 'SDimmersCctRGB',
-	'DESCRIPTION'=>'Диммер CCT RGB',
+	'DESCRIPTION'=>'Освещение(Диммер CCT RGB)',
 	'PROPERTIES' => array(
 		'color' => array('DESCRIPTION' => 'Цвет (RGB).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'colorWork' => array('DESCRIPTION' => 'Рабочий цвет.', 'ONCHANGE' => 'worksUpdated'),
@@ -97,14 +97,14 @@ $this->device_types['dimmerCctRGB'] = array(
 		'level' => array('DESCRIPTION' => 'Яркость (1<-->100).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'levelWork' => array('DESCRIPTION' => 'Рабочая яркость.', 'ONCHANGE' => 'worksUpdated'),
 		'levelSaved' => array('DESCRIPTION' => 'Последняя яркость.', 'DATA_KEY' => 1),
-		'levelMin' => array('DESCRIPTION' => 'Минимальная рабочая яркость', '_CONFIG_TYPE' => 'num'),
 		'levelMax' => array('DESCRIPTION' => 'Максимальная рабочая яркость', '_CONFIG_TYPE' => 'num'),
+		'levelMin' => array('DESCRIPTION' => 'Минимальная рабочая яркость', '_CONFIG_TYPE' => 'num'),
 
 		'cct' => array('DESCRIPTION' => 'Температура (1-100)', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'cctWork' => array('DESCRIPTION' => 'Рабочая теплота.', 'ONCHANGE' => 'worksUpdated'),
 		'cctSaved' => array('DESCRIPTION' => 'Сохраненная теплота.'),
-		'cctMaxWork' => array('DESCRIPTION' => 'Максимальная рабочая теплота', '_CONFIG_TYPE' => 'num'),
-		'cctMinWork' => array('DESCRIPTION' => 'Минимальная рабочая теплота', '_CONFIG_TYPE' => 'num'),
+		'cctMax' => array('DESCRIPTION' => 'Максимальная рабочая теплота', '_CONFIG_TYPE' => 'num'),
+		'cctMin' => array('DESCRIPTION' => 'Минимальная рабочая теплота', '_CONFIG_TYPE' => 'num'),
 	),
 	'METHODS' => array(
 		'levelUp' => array('DESCRIPTION' => 'Увеличить яркость.', '_CONFIG_SHOW' => 1, '_CONFIG_REQ_VALUE' => 1),

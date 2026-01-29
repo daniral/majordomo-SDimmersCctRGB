@@ -132,7 +132,7 @@
 		let lamp = window.dimmersCctRGB%.object_id%;
 		lamp.dragging = true;
 		lamp.cct = val;
-		$('#dimmersCctRGB%.object_id%_cct').text("Температура: " + val + "%");
+		$('#dimmersCctRGB%.object_id%_ccttxt').text("Температура: " + val + "%");
 		updateSliderFill('#dimmersCctRGB%.object_id%_cct', val, '#f7a800');
 	}
 
@@ -272,9 +272,9 @@ input[type=range]::-webkit-slider-thumb:hover {
            oninput="previewLevel%.object_id%(this.value)"
            onmouseup="sendNewLevel%.object_id%()"
            ontouchend="sendNewLevel%.object_id%()"> 
-    <p id="dimmersCctRGB%.object_id%_cct">Температура: %.cct%%</p>
+    <p id="dimmersCctRGB%.object_id%_ccttxt">Температура: %.cct%%</p>
     <input id="dimmersCctRGB%.object_id%_cct" 
-           type="range" min="0" max="100" step="1"
+           type="range" min="1" max="100" step="1"
            value="%.cct%" 
            oninput="previewCct%.object_id%(this.value)"
            onmouseup="sendNewCct%.object_id%()"
@@ -285,4 +285,5 @@ input[type=range]::-webkit-slider-thumb:hover {
 <script>
 	// Инициализация фона ползунка и сцен при загрузке
 	updateSliderFill('#dimmersCctRGB%.object_id%_level', %.level%, '%.color%');
+	updateSliderFill('#dimmersCctRGB%.object_id%_cct', %.cct%, '#f7a800');
 </script>
