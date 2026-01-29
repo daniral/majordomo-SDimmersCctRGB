@@ -116,11 +116,6 @@ if ($property === 'levelWork' || $property === 'cctWork') {
 // Если не удалось рассчитать значение — выходим
 if (is_null($valueToSet)) return;
 
-// Авто-включение
-if (!$this->getProperty('status')) {
-    $this->setProperty('status', 1);
-}
-
 // Записываем полученное значение в основное свойство и сохраняем
 $this->setProperty(str_replace('Work', '', $property), $valueToSet, 'worksUpdated');
 $this->setProperty(str_replace('Work', '', $property) . 'Saved', $valueToSet);
