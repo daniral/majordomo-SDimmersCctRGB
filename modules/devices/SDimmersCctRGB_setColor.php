@@ -26,4 +26,4 @@
 $color = $params['color'] ?? $params['value'] ?? null;
 if ($color === null) return;
 
-$this->setProperty('color', $color, 'setLevelColor');
+$this->setProperty('color', $color, 'setColor');

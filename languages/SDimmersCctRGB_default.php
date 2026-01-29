@@ -7,6 +7,7 @@
  *
  * $dictionary - array defining patterns to recognize commands:
  *   - 'SDimmersCctRGB_PATTERN_BRIGHTNESS': keywords for brightness control
+ *   - 'SDimmersCctRGB_PATTERN_TEMPERATURE': keywords for color temperature control
  *   - 'SDimmersCctRGB_PATTERN_COLOR': keywords for color control
  *
  * Each value is a string with keywords separated by |
@@ -18,6 +19,9 @@ $dictionary = array(
 
     // Brightness control
     'SDimmersCctRGB_PATTERN_BRIGHTNESS' => 'bright|brightness|lighter|dimmer|light level|increase light|decrease light',
+
+    // Color temperature control
+    'SDimmersCctRGB_PATTERN_TEMPERATURE' => 'temperature|color|warm|cool|cold|neutral|tone|whit|yellow|blue',
 
     // Color control
     'SDimmersCctRGB_PATTERN_COLOR' => 'red|green|blue|white|yellow|cyan|magenta|orange|purple|pink|lime',

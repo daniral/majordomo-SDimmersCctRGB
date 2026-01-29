@@ -24,7 +24,24 @@
  *         - Ключевые слова: "тусклее", "меньше", "приглуши", "потемнее"
  *         - Уменьшает текущий уровень на -10
  *
- * 3. Управление цветом:
+  * 3. Управление цветовой температурой (CCT):
+ *    3.1. Абсолютные значения:
+ *         - Команды вида: "теплота 80%", "холодность 20%" и т.п.
+ *
+ *    3.2. Предустановленные стили:
+ *         - "самый холодный"                      → 0
+ *         - "максимально холодный"                → 0
+ *         - "холодный"                            → 25
+ *         - "прохладный"                          → 33
+ *         - "нейтральный"                         → 50
+ *         - "тёплый", "теплый"                    → 75               
+ *         - "максимально тёплый", "самый тёплый"  → 100
+ *
+ *    3.3. Относительное изменение CCT:
+ *         - Нагрев (теплее):   "теплее", "жёлтее", "желтее" → +10
+ *         - Охлаждение:        "прохладнее", "холоднее", "синее" → -10
+ *
+ * 4. Управление цветом:
  *    - Используются ключевые слова из словаря LANG_SDimmersCctRGB_PATTERN_COLOR
  *    - Поддерживаемые цвета: красный, зелёный, синий, белый, жёлтый, голубой,
  *      пурпурный, оранжевый, фиолетовый, розовый, лайм.
@@ -91,6 +108,55 @@ if ($device_type == 'SDimmersCctRGB') {
         if (isset($value)) {
             $run_code      .= "callMethod('$linked_object.setLevel', array('value' => $value));";
             $opposite_code .= "callMethod('$linked_object.setLevel', array('value' => $value));";
+            $processed = 1;
+            $reply_confirm = 1;
+        }
+    }
+
+    // --- ЦВЕТОВАЯ ТЕМПЕРАТУРА ---
+    elseif (preg_match('/' . LANG_SDimmersCctRGB_PATTERN_TEMPERATURE . '/uis', $command)) {
+        $currentCct = (int)getGlobal("$linked_object.cct");
+        $step = 10;
+
+        // Пресеты для цвета
+        $presets = array(
+            'самый холодный' => 0,
+            'максимально холодный' => 0,
+            'холодный' => 25,
+            'прохладный' => 33,
+            'нейтральный' => 50,
+            'тёплый' => 75,
+            'теплый' => 75,
+            'максимально тёплый' => 100,
+            'самый тёплый' => 100,
+        );
+
+        // Абсолютные команды: "теплота 80%"
+        if (preg_match('/(?:\s)(\d{1,2}|100)(?:%|\s|$)/uis', $command, $matches)) {
+            $value = (int)$matches[1];
+        }
+        // Поиск предустановок
+        else {
+            foreach ($presets as $word => $presetValue) {
+                if (mb_stripos($command, $word) !== false) {
+                    $value = $presetValue;
+                    break;
+                }
+            }
+        }
+        // Относительные команды
+        if (!isset($value)) {
+            if (preg_match('/(теплее|жёлтее|желтее)/uis', $command)) {
+                $value = min(100, $currentCct + $step);
+            }
+            elseif (preg_match('/(прохладнее|холоднее|синее)/uis', $command)) {
+                $value = max(0, $currentCct - $step);
+            }
+        }
+
+        if (isset($value)) {
+            $run_code      .= "callMethod('$linked_object.setCct', array('value' => $value));";
+            $opposite_code .= "callMethod('$linked_object.setCct', array('value' => $value));";
             $processed = 1;
             $reply_confirm = 1;
         }

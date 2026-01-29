@@ -10,6 +10,11 @@
  *      - Конвертирует его в % 1-100.
  *      - Устанавливает уровень яркости (level)
  * 
+ *  *  1. Обрабатывает изменения свойства "cctWork":
+ *      - Получает новое значение cctMin - cctMax.
+ *      - Конвертирует его в % 1-100.
+ *      - Устанавливает уровень теплоты (cct)
+
  *  2. Обрабатывает изменения свойства "colorWork":
  *      - Получает новое значение {"x":<value>,"y":<value>}.
  *      - Конвертирует его в RGB Hex.
@@ -25,14 +30,42 @@
  * Важные свойства объекта:
  * ------------------------
  * - color             — текущий HEX-цвет устройства.
+ * - colorWork         — текущее рабочее значение цвета (JSON {"x":__,"y":__}).
  * - colorSaved        — последний сохранённый HEX-цвет.
  * - level             — уровень яркости (1–100).
+ * - levelWork         — текущее рабочее значение яркости (число).
  * - levelSaved        — последний сохранённый уровень яркости.
+ * - cct               — уровень теплоты (1–100).
+ * - cctWork           — текущее рабочее значение теплоты (число).
+ * - cctSaved          — последний сохранённый уровень теплоты.
  *
  * Используемые функции:
  * ----------------------
  * - normalizeRange($val, $min, $max, $type) — нормализует числовое значение.
- *
+ * - workToLevel($workValue, $min, $max, $limitMin) — конвертирует рабочее значение в %.
+ * - xyToHex($x, $y) — конвертирует XY-координаты в HEX-цвет.
+ * 
+ * Логика обработки:
+ * -------------------
+ * 1. Получает имя изменённого свойства из $params['PROPERTY'].
+ * 2. Получает источник изменения из $params['SOURCE'].
+ * 3. В зависимости от изменённого свойства выполняет соответствующую обработку:
+ *   - Для "colorWork":
+ *      • Декодирует JSON-строку в массив.
+ *     • Конвертирует XY в HEX.
+ *    • Устанавливает свойства color и colorSaved.
+ *  - Для "levelWork":
+ *     • Получает levelMin и levelMax.
+ *    • Конвертирует рабочее значение в %.
+ *   • Устанавливает свойства level и levelSaved.
+ * - Для "cctWork":
+ *    • Получает cctMin и cctMax.
+ *   • Конвертирует рабочее значение в %.
+ *  • Устанавливает свойства cct и cctSaved.
+ * 4. Защита от рекурсий:
+ *  • Если источник изменения равен "propertysUpdated", функция завершает выполнение без изменений.
+ * 
+ * 
  * Примечания:
  * -----------
  * - Обработка не выполняется, если SOURCE == 'propertysUpdated'
@@ -43,21 +76,25 @@
 //
 
 // --- Дефолтные свойства
-if($this->getProperty('color') == '') $this->setProperty('color', '#ffffff');
-if($this->getProperty('level') == '') $this->setProperty('level', 100);
-if($this->getProperty('levelMin') == '') $this->setProperty('levelMin', 1);
-if($this->getProperty('levelMax') == '') $this->setProperty('levelMax', 254);
+if($this->getProperty('level') === '') $this->setProperty('level', 100);
+if($this->getProperty('levelMin') === '') $this->setProperty('levelMin', 1);
+if($this->getProperty('levelMax') === '') $this->setProperty('levelMax', 254);
+if ($this->getProperty('cct') === '') $this->setProperty('cct', '50');
+if ($this->getProperty('cctMin') === '') $this->setProperty('cctMin', '153');
+if ($this->getProperty('cctMax') === '') $this->setProperty('cctMax', '500');
+if($this->getProperty('color') === '') $this->setProperty('color', '#ffffff');
 
 $property = $params['PROPERTY'] ?? null;
 $source   = strtok($params['SOURCE'] ?? '', ' ');
-$levelMin = (int)$this->getProperty('levelMin');
-$levelMax = (int)$this->getProperty('levelMax');
+$max   = $property === 'levelWork' ? $this->getProperty('levelMax') : $this->getProperty('cctMax');
+$min   = $property === 'levelWork' ? $this->getProperty('levelMin') : $this->getProperty('cctMin');
+$valueToSet = null;
 
 // Для цвета оставляем сырой JSON/массив, для яркости нормализуем
 $value = ($property === 'colorWork')
     ? $params['NEW_VALUE']
-    : normalizeRange($params['NEW_VALUE'], $levelMin, $levelMax, 'number');
-
+    : normalizeRange($params['NEW_VALUE'], $min, $max, 'number');
+    
 // Защита от рекурсий (если изменение пришло от нашего же скрипта управления)
 if ($source === 'propertysUpdated' || is_null($value)) return;
 
@@ -66,26 +103,24 @@ if ($property === 'colorWork') {
     $data = is_array($value) ? $value : json_decode($value, true);
     if (!$data || !isset($data['x']) || !isset($data['y'])) return;
     
-    // Используем вашу функцию из файла
-    $hex = xyToHex($data['x'], $data['y']);
-    
-    // Обновляем визуальные свойства с источником worksUpdated
-    $this->setProperty('color', $hex, 'worksUpdated');
-    $this->setProperty('colorSaved', $hex);
-    return;
+    // Используем функцию конвертации XY в HEX
+    $valueToSet = xyToHex($data['x'], $data['y']);
 }
 
-// --- БЛОК ЯРКОСТИ (Рабочее значение -> Проценты 1-100) ---
-if ($property === 'levelWork') {
+// --- БЛОК ЯРКОСТИ И ТЕПЛОТЫ (Рабочее значение -> Проценты 1-100) ---
+if ($property === 'levelWork' || $property === 'cctWork') {
     // Конвертируем значение устройства в % (с учетом min/max и лимитом 1%)
-    $level = workToLevel($value, $levelMin, $levelMax, 1);
-    
-    if (is_null($level)) {
-        $level = (int)$this->getProperty('levelSaved') ?: 100;
-    }
-
-    // Обновляем текущее состояние в интерфейсе
-    $this->setProperty('level', $level, 'worksUpdated');
-    $this->setProperty('levelSaved', $level);
-    return;
+    $valueToSet = workToLevel($value, $min, $max, 1);
 }
+
+// Если не удалось рассчитать значение — выходим
+if (is_null($valueToSet)) return;
+
+// Авто-включение
+if (!$this->getProperty('status')) {
+    $this->setProperty('status', 1);
+}
+
+// Записываем полученное значение в основное свойство и сохраняем
+$this->setProperty(str_replace('Work', '', $property), $valueToSet, 'worksUpdated');
+$this->setProperty(str_replace('Work', '', $property) . 'Saved', $valueToSet);

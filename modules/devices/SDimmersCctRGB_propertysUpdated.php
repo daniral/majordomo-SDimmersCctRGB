@@ -4,25 +4,28 @@
  * Метод выполняет комплексную обработку входящих свойств устройства
  * и отвечает за:
  *
- * --- Цвет и яркость ---
+ * --- Цвет Яркость  Теплота ---
  *  • Преобразование входящего цвета: HEX или предустановки (red, blue, lime и т.д.).
- *  • Нормализацию значений цвета и яркости.
+ *  • Нормализацию значений цвета яркости и теплоты.
  *  • Формирование строки {"x":__,"y":__} и запись в colorWork.
- *  • Автоматическое включение устройства при изменении color или level.
- *  • Сохранение последних значений colorSaved и levelSaved.
+ *  • Автоматическое включение устройства при изменении color level cct.
+ *  • Сохранение последних значений colorSaved levelSaved cctSaved.
  *
  * --- Защита от рекурсий ---
  *  • SOURCE="worksUpdated" — предотвращает циклические обновления.
- *  • SOURCE="autoMode" — отключает запись в flag и сохранение значений.
  *
  * --- Используемые свойства объекта ---
  *  • status           — включено/выключено (0/1)
  *  • level            — текущая яркость (1–100)
+ *  • cct              — текущая теплота (1–100)
  *  • color            — текущий HEX-цвет
  *  • levelSaved       — сохранённая яркость
  *  • colorSaved       — сохранённый цвет
+ *  • cctSaved         — сохранённая теплота
  *  • workValue        — строка для устройства
- *
+ *  • levelMin, levelMax — границы яркости устройства
+ *  • cctMin, cctMax     — границы теплоты устройства
+ * 
  * --- Параметры входящего события ---
  * @param array $params Ассоциативный массив:
  *      - string $params['PROPERTY']   Имя изменяемого свойства.
@@ -33,7 +36,7 @@
  *  1. Если SOURCE="worksUpdated" → выход (защита от рекурсий).
  *  2. Преобразование предустановок цвета (red, blue, lime ...).
  *  3. Нормализация числовых значений.
- *  4. Для color/level:
+ *  4. Для color/level/cct:
  *        - включение устройства,
  *        - генерация workValue,
  *        - сохранение *_Saved.
@@ -43,10 +46,13 @@
 //
 
 // --- Дефолтные свойства
-if($this->getProperty('color') == '') $this->setProperty('color', '#ffffff');
-if($this->getProperty('level') == '') $this->setProperty('level', 100);
-if($this->getProperty('levelMin') == '') $this->setProperty('levelMin', 1);
-if($this->getProperty('levelMax') == '') $this->setProperty('levelMax', 254);
+if($this->getProperty('level') === '') $this->setProperty('level', 100);
+if($this->getProperty('levelMin') === '') $this->setProperty('levelMin', 1);
+if($this->getProperty('levelMax') === '') $this->setProperty('levelMax', 254);
+if ($this->getProperty('cct') === '') $this->setProperty('cct', '50');
+if ($this->getProperty('cctMin') === '') $this->setProperty('cctMin', '153');
+if ($this->getProperty('cctMax') === '') $this->setProperty('cctMax', '500');
+if($this->getProperty('color') === '') $this->setProperty('color', '#ffffff');
 
 $value = $params['NEW_VALUE'] ?? null;
 
@@ -65,11 +71,11 @@ if (isset($transform[$value])) {
 $property = $params['PROPERTY'] ?? null;
 $source   = strtok($params['SOURCE'] ?? '', ' ');
 
-// 1. Считываем границы устройства
-$levelMin = $this->getProperty('levelMin');
-$levelMax = $this->getProperty('levelMax');
+// Считываем границы устройства
+$min = ($property=='level') ? $this->getProperty('levelMin') : $this->getProperty('cctMin');
+$max = ($property=='level') ? $this->getProperty('levelMax') : $this->getProperty('cctMax');
 
-// 2. Нормализация входящего значения
+// Нормализация входящего значения
 $value = ($property === 'color')
     ? normalizeRange($value) 
     : normalizeRange($value, 1, 100, 'number');
@@ -82,15 +88,15 @@ if ($source === 'worksUpdated' || is_null($value)) {
     return;
 }
 
-// --- Обработка Цвет и Яркость ---
-if ($property === 'color' || $property === 'level') {
+// --- Обработка Цвет Яркость Теплота ---
+if ($property === 'color' || $property === 'level' || $property === 'cct') {
     
     // Подготовка значения для устройства (Work)
-    if ($property === 'level') {
-        $workValue = levelToWork($value, $levelMin, $levelMax, 1);
+    if ($property === 'level' || $property === 'cct') {
+        $workValue = levelToWork($value, $min, $max, 1);
         if ($workValue === null) return;
     } 
-    
+
     if ($property === 'color') {
         // Конвертируем в XY и упаковываем в JSON строку
         $workValue = json_encode(hexToXy($value));
@@ -100,7 +106,7 @@ if ($property === 'color' || $property === 'level') {
     if (!$this->getProperty('status')) {
         $this->setProperty('status', 1);
     }
-
+    
     // Сохраняем для истории и восстановления
     $this->setProperty($property . 'Saved', $value);
 
