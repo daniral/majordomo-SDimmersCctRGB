@@ -58,7 +58,7 @@
 $defaults = [
     'color' => '#ffffff', 
     'level' => '100',
-    'cct' => '100',
+    'cct' => '1',
     'mode' => '2',
 
     'levelMin' => '1',
@@ -68,12 +68,12 @@ $defaults = [
 
     'dayColor' => '#FFFFFF',
     'dayLevel' => '100', 
-    'dayCct' => '100', 
+    'dayCct' => '1', 
     'dayMode' => '2',
 
     'nightColor' => '#FFFF00',
     'nightLevel' => '30', 
-    'nightCct' => '1', 
+    'nightCct' => '100', 
     'nightMode' => '2',
     
     'timerOff' => '45', 'autoOnOff' => '1',
