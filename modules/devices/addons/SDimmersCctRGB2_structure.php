@@ -1,6 +1,6 @@
 <?php
 /**
- * Class SDimmersCctRGB
+ * Class SDimmersCctRGB2
  *
  * Класс устройств RGB с яркостью для MajorDoMo.
  * Наследуется от SControllers. Описывает свойства яркости, цвета,
@@ -78,16 +78,16 @@
  *      Вызывается при изменении рабочих параметров (colorWork / sceneWork).
  */
 
-if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SDimmersCctRGB_' . SETTINGS_SITE_LANGUAGE . '.php')) {
-	include_once(ROOT . 'languages/SDimmersCctRGB_' . SETTINGS_SITE_LANGUAGE . '.php');
+if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SDimmersCctRGB2_' . SETTINGS_SITE_LANGUAGE . '.php')) {
+	include_once(ROOT . 'languages/SDimmersCctRGB2_' . SETTINGS_SITE_LANGUAGE . '.php');
 } else {
-	include_once(ROOT . 'languages/SDimmersCctRGB_default.php'); //
+	include_once(ROOT . 'languages/SDimmersCctRGB2_default.php'); //
 }
 
 $this->device_types['dimmerCctRGB'] = array(
 	'TITLE' => 'Освещение(Диммер CCT RGB)',
 	'PARENT_CLASS' => 'SControllers',
-	'CLASS' => 'SDimmersCctRGB',
+	'CLASS' => 'SDimmersCctRGB2',
 	'DESCRIPTION'=>'Освещение(Диммер CCT RGB)',
 	'PROPERTIES' => array(
 		'color' => array('DESCRIPTION' => 'Цвет (RGB).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
@@ -105,6 +105,36 @@ $this->device_types['dimmerCctRGB'] = array(
 		'cctSaved' => array('DESCRIPTION' => 'Сохраненная теплота.'),
 		'cctMax' => array('DESCRIPTION' => 'Максимальная рабочая теплота', '_CONFIG_TYPE' => 'num'),
 		'cctMin' => array('DESCRIPTION' => 'Минимальная рабочая теплота', '_CONFIG_TYPE' => 'num'),
+
+		'dayColor' => array('DESCRIPTION' => 'Цвет днем', '_CONFIG_TYPE' => 'num',),
+		'dayLevel' => array('DESCRIPTION' => 'Уровень яркости днем', '_CONFIG_TYPE' => 'num',),
+		'dayCct' => array('DESCRIPTION' => 'Уровень теплоты днем', '_CONFIG_TYPE' => 'num',),
+		'dayMode' => array('DESCRIPTION' => 'Что включать днем (цвет, температура)','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Цвет,2=Температура'),
+
+		'nightColor' => array('DESCRIPTION' => 'Цвет ночью', '_CONFIG_TYPE' => 'num',),
+		'nightLevel' => array('DESCRIPTION' => 'Уровень яркости ночью', '_CONFIG_TYPE' => 'num',),
+		'nightCct' => array('DESCRIPTION' => 'Уровень теплоты ночью', '_CONFIG_TYPE' => 'num',),
+		'nightMode' => array('DESCRIPTION' => 'Что включать ночью (цвет, температура)','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Цвет,2=Температура'),
+
+		'mode' => array('DESCRIPTION' => 'Что включать (цвет, температура)','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Цвет,2=Температура'),
+
+		'autoOnOff' => array('DESCRIPTION' => 'Автовключение','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Включено,0=Отключено'),
+		'timerOff' => array('DESCRIPTION' => 'Выключить через(сек). 0-не выключать', '_CONFIG_TYPE' => 'num'),
+		'workingDay' => array('DESCRIPTION' => 'Включать','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=День,2=Ночь,3=24 часа'),
+		'workingBy' => array('DESCRIPTION' => 'Работать по','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=Время,2=Солнце,3=Датчик'),
+		'dayBegin' => array('DESCRIPTION' => 'Начало режима день(hh:mm)', '_CONFIG_TYPE' => 'num'),
+		'nightBegin' => array('DESCRIPTION' => 'Начало режима ночь(hh:mm)', '_CONFIG_TYPE' => 'num'),
+		'sunriseTime' => array('DESCRIPTION' => 'Время восхода солнца'),
+		'sunsetTime' => array('DESCRIPTION' => 'Время захода солнца'),
+		'signSunrise' => array('DESCRIPTION' => 'Восход','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=прибавить,0=отнять'),
+		'addTimeSunrise' => array('DESCRIPTION' => 'Часов:Минут(00:00)', '_CONFIG_TYPE' => 'num'),
+		'signSunset' => array('DESCRIPTION' => 'Закат','_CONFIG_TYPE'=>'select','_CONFIG_OPTIONS'=>'1=прибавить,0=отнять'),
+		'addTimeSunset' => array('DESCRIPTION' => 'Часов:Минут(00:00)', '_CONFIG_TYPE' => 'num'),
+		'illuminanceMax' => array('DESCRIPTION' => 'Макc.освещение(датчик)', '_CONFIG_TYPE' => 'num'),
+		'illuminanceFlag' => array('DESCRIPTION' => 'Стопер датчика освещения'),
+		'illuminance' => array('DESCRIPTION' => 'Данные с датчика освещения', 'DATA_KEY' => 1),
+		'presence' => array('DESCRIPTION' => 'Данные с датчика присутствия', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
+		'flag' => array('DESCRIPTION' => 'Стопер запуска авто мода'),
 	),
 	'METHODS' => array(
 		'levelUp' => array('DESCRIPTION' => 'Увеличить яркость.', '_CONFIG_SHOW' => 1, '_CONFIG_REQ_VALUE' => 1),

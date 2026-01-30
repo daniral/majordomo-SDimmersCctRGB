@@ -1,9 +1,9 @@
 <?php
 /**
- * Обрабатывает голосовые команды для устройства типа SDimmersCctRGB.
+ * Обрабатывает голосовые команды для устройства типа SDimmersCctRGB2.
  *
  * Функция анализирует текст голосовой команды и формирует код выполнения ($run_code)
- * для объекта ленты SDimmersCctRGB. Поддерживаются включение, выключение, переключение,
+ * для объекта ленты SDimmersCctRGB2. Поддерживаются включение, выключение, переключение,
  * управление яркостью, управлением цветом и сценами.
  *
  * Поддерживаемые возможности:
@@ -42,7 +42,7 @@
  *         - Охлаждение:        "прохладнее", "холоднее", "синее" → -10
  *
  * 4. Управление цветом:
- *    - Используются ключевые слова из словаря LANG_SDimmersCctRGB_PATTERN_COLOR
+ *    - Используются ключевые слова из словаря LANG_SDimmersCctRGB2_PATTERN_COLOR
  *    - Поддерживаемые цвета: красный, зелёный, синий, белый, жёлтый, голубой,
  *      пурпурный, оранжевый, фиолетовый, розовый, лайм.
  *    - Команда вызывает метод setColor(value => <цвет>)
@@ -55,7 +55,7 @@
  *    - При необходимости устанавливает $reply_confirm = 1
  *
  * Ожидаемые входные параметры (передаются извне в область видимости):
- *    @param string $device_type     Тип устройства (должен быть 'SDimmersCctRGB')
+ *    @param string $device_type     Тип устройства (должен быть 'SDimmersCctRGB22')
  *    @param string $command         Текст голосовой команды пользователя
  *    @param string $linked_object   Имя объекта в MajorDoMo
  *    @param string $device_title    Человекочитаемое название устройства
@@ -70,7 +70,7 @@
  * @return void
  */
 
-if ($device_type == 'SDimmersCctRGB') {
+if ($device_type == 'SDimmersCctRGB2') {
 
     // --- ВКЛ / ВЫКЛ / ПЕРЕКЛЮЧИТЬ ---
     if (preg_match('/' . LANG_DEVICES_PATTERN_TURNON . '/uis', $command)) {
@@ -93,7 +93,7 @@ if ($device_type == 'SDimmersCctRGB') {
     }
 
     // --- ЯРКОСТЬ ---
-    elseif (preg_match('/' . LANG_SDimmersCctRGB_PATTERN_BRIGHTNESS . '/uis', $command)) {
+    elseif (preg_match('/' . LANG_SDimmersCctRGB2_PATTERN_BRIGHTNESS . '/uis', $command)) {
         $currentLevel = (int)getGlobal("$linked_object.level");
         $step = 10;
         if (preg_match('/(?:\s)(\d{1,2}|100)(?:%|\s|$)/uis', $command, $matches)) {
@@ -114,7 +114,7 @@ if ($device_type == 'SDimmersCctRGB') {
     }
 
     // --- ЦВЕТОВАЯ ТЕМПЕРАТУРА ---
-    elseif (preg_match('/' . LANG_SDimmersCctRGB_PATTERN_TEMPERATURE . '/uis', $command)) {
+    elseif (preg_match('/' . LANG_SDimmersCctRGB2_PATTERN_TEMPERATURE . '/uis', $command)) {
         $currentCct = (int)getGlobal("$linked_object.cct");
         $step = 10;
 
@@ -163,7 +163,7 @@ if ($device_type == 'SDimmersCctRGB') {
     }
 
     // --- ЦВЕТ ---
-    elseif (preg_match('/' . LANG_SDimmersCctRGB_PATTERN_COLOR . '/uis', $command)) {
+    elseif (preg_match('/' . LANG_SDimmersCctRGB2_PATTERN_COLOR . '/uis', $command)) {
         $colors = array(
             'красн' => 'red', 'зел' => 'green', 'син' => 'blue',
             'бел' => 'white', 'жёлт' => 'yellow', 'желт' => 'yellow',

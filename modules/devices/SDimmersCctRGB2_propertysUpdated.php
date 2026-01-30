@@ -46,13 +46,7 @@
 //
 
 // --- Дефолтные свойства
-if($this->getProperty('level') === '') $this->setProperty('level', 100);
-if($this->getProperty('levelMin') === '') $this->setProperty('levelMin', 1);
-if($this->getProperty('levelMax') === '') $this->setProperty('levelMax', 254);
-if ($this->getProperty('cct') === '') $this->setProperty('cct', '50');
-if ($this->getProperty('cctMin') === '') $this->setProperty('cctMin', '153');
-if ($this->getProperty('cctMax') === '') $this->setProperty('cctMax', '500');
-if($this->getProperty('color') === '') $this->setProperty('color', '#ffffff');
+$this->callMethod('byDefault');
 
 $value = $params['NEW_VALUE'] ?? null;
 $property = $params['PROPERTY'] ?? null;
@@ -119,5 +113,4 @@ if ($property === 'color' || $property === 'level' || $property === 'cct') {
 
     // Отправляем готовую команду на устройство
     $this->setProperty($property . 'Work', $workValue, 'propertysUpdated');
-    return;
 }
