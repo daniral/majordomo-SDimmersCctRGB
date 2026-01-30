@@ -55,30 +55,11 @@ if ($this->getProperty('cctMax') === '') $this->setProperty('cctMax', '500');
 if($this->getProperty('color') === '') $this->setProperty('color', '#ffffff');
 
 $value = $params['NEW_VALUE'] ?? null;
-
-// --- Преобразование предустановок цвета
-static $transform = [
-    'red' => '#ff0000', 'green' => '#00ff00', 'blue' => '#0000ff',
-    'white' => '#ffffff', 'yellow' => '#ffff00', 'cyan' => '#00ffff',
-    'magenta' => '#ff00ff', 'orange' => '#ffa500', 'purple' => '#800080',
-    'pink' => '#ffc0cb', 'lime' => '#00ff00'
-];
-
-if (isset($transform[$value])) {
-    $value = $transform[$value];
-}
-
 $property = $params['PROPERTY'] ?? null;
 $source   = strtok($params['SOURCE'] ?? '', ' ');
-
 // Считываем границы устройства
 $min = ($property=='level') ? $this->getProperty('levelMin') : $this->getProperty('cctMin');
 $max = ($property=='level') ? $this->getProperty('levelMax') : $this->getProperty('cctMax');
-
-// Нормализация входящего значения
-$value = ($property === 'color')
-    ? normalizeRange($value) 
-    : normalizeRange($value, 1, 100, 'number');
 
 // --- Защита от рекурсий и неверных данных
 if ($source === 'worksUpdated' || is_null($value)) {
@@ -90,14 +71,35 @@ if ($source === 'worksUpdated' || is_null($value)) {
 
 // --- Обработка Цвет Яркость Теплота ---
 if ($property === 'color' || $property === 'level' || $property === 'cct') {
-    
-    // Подготовка значения для устройства (Work)
     if ($property === 'level' || $property === 'cct') {
+        $presets = [
+            'coolest' => 0,
+            'cool'    => 33,
+            'warm'    => 66,
+            'warmest' => 100,
+        ];
+        if (isset($presets[$value])) {
+            $value = $presets[$value];
+        }
+        // Нормализация входящего значения
+        $value = normalizeRange($value, 1, 100, 'number');
         $workValue = levelToWork($value, $min, $max, 1);
         if ($workValue === null) return;
-    } 
+    }
 
     if ($property === 'color') {
+        // --- Преобразование предустановок цвета
+        static $transform = [
+            'red' => '#ff0000', 'green' => '#00ff00', 'blue' => '#0000ff',
+            'white' => '#ffffff', 'yellow' => '#ffff00', 'cyan' => '#00ffff',
+            'magenta' => '#ff00ff', 'orange' => '#ffa500', 'purple' => '#800080',
+            'pink' => '#ffc0cb', 'lime' => '#00ff00'
+        ];
+        if (isset($transform[$value])) {
+            $value = $transform[$value];
+        }
+        // Нормализация входящего значения
+        $value = normalizeRange($value);
         // Конвертируем в XY и упаковываем в JSON строку
         $workValue = json_encode(hexToXy($value));
     }
