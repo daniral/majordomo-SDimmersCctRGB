@@ -72,11 +72,11 @@ if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SDimmersCctRGB2_' . 
 	include_once(ROOT . 'languages/SDimmersCctRGB2_default.php'); //
 }
 
-$this->device_types['dimmerCctRGB'] = array(
-	'TITLE' => 'Освещение(Диммер CCT RGB)',
+$this->device_types['dimmerCctRGB2'] = array(
+	'TITLE' => 'Освещение(Диммер CCT RGB) -2',
 	'PARENT_CLASS' => 'SControllers',
 	'CLASS' => 'SDimmersCctRGB2',
-	'DESCRIPTION'=>'Освещение(Диммер CCT RGB)',
+	'DESCRIPTION'=>'Освещение(Диммер CCT RGB) -2',
 	'PROPERTIES' => array(
 		'color' => array('DESCRIPTION' => 'Цвет (RGB).', 'ONCHANGE' => 'propertysUpdated', 'DATA_KEY' => 1),
 		'colorWork' => array('DESCRIPTION' => 'Рабочий цвет.', 'ONCHANGE' => 'worksUpdated'),
