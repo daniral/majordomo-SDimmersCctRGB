@@ -62,7 +62,7 @@ pink, lime
 
 Используемые имена:
 ```
-coolest, cool, warm, warmest.
+coolest, cool, warm, warmest.  
 
 
 | Метод            | Описание                 |
