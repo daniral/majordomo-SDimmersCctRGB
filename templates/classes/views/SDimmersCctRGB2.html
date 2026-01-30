@@ -7,7 +7,7 @@
  *
  * Описание:
  * Этот файл реализует виджет управления лампой с цветом и яркостью.
- * Использует глобальный объект `window.dimmersCctRGB`
+ * Использует глобальный объект `window.dimmersCctRGB2`
  * для хранения состояния лампы.
  *
  * Плейсхолдеры, заменяемые сервером:
@@ -23,7 +23,7 @@
  *
  * ==========================================================
  * Глобальный объект lamp:
- * window.dimmersCctRGB[object_id] = {
+ * window.dimmersCctRGB2[object_id] = {
  *   currentColor: string,          // текущий цвет (#HEX)
  *   level: number,                 // яркость лампы (1-100)
  *   cct: number,                   // цветовая температура (1-100)
@@ -77,15 +77,15 @@
  *   - @param {string} color - цвет до текущего значения (#HEX)
  *
  * HTML элементы:
- *   - #dimmersCctRGB%.object_id%_leveltxt      - текст яркости лампы
- *   - #dimmersCctRGB%.object_id%_level         - слайдер яркости
+ *   - #dimmersCctRGB2%.object_id%_leveltxt      - текст яркости лампы
+ *   - #dimmersCctRGB2%.object_id%_level         - слайдер яркости
  *
  */
 
     // создаём объект для текущей лампы, если его нет
-    if (typeof window.dimmersCctRGB === 'undefined') window.dimmersCctRGB = {};
-    if (typeof window.dimmersCctRGB%.object_id% === 'undefined') {
-        window.dimmersCctRGB%.object_id% = {
+    if (typeof window.dimmersCctRGB2 === 'undefined') window.dimmersCctRGB2 = {};
+    if (typeof window.dimmersCctRGB2%.object_id% === 'undefined') {
+        window.dimmersCctRGB2%.object_id% = {
 			      currentColor: '%.color%',
             level: %.level% || 50,
             cct: %.cct% || 50,
@@ -98,26 +98,26 @@
 
     // --- Цвет ---
     function sendNewColor%.object_id%(val) {
-		let lamp = window.dimmersCctRGB%.object_id%;
+		let lamp = window.dimmersCctRGB2%.object_id%;
 		lamp.currentColor = val;  
     //callMethod('%.object_title%.setColor', 'value=' + encodeURIComponent(val));
     setGlobal('%.object_title%.color', val);
 		// обновляем цвет фона у слайдера ЯРКОСТИ ЦВЕТА
-		updateSliderFill('#dimmersCctRGB%.object_id%_level', lamp.level, val);
+		updateSliderFill('#dimmersCctRGB2%.object_id%_level', lamp.level, val);
     }
 
 // --- Яркость ---
     function previewLevel%.object_id%(val) {
         val = parseInt(val);
-        let lamp = window.dimmersCctRGB%.object_id%;
+        let lamp = window.dimmersCctRGB2%.object_id%;
         lamp.dragging = true;
         lamp.level = val;
-        $('#dimmersCctRGB%.object_id%_leveltxt').text("Яркость: " + val + "%");
-        updateSliderFill('#dimmersCctRGB%.object_id%_level', val, lamp.currentColor);
+        $('#dimmersCctRGB2%.object_id%_leveltxt').text("Яркость: " + val + "%");
+        updateSliderFill('#dimmersCctRGB2%.object_id%_level', val, lamp.currentColor);
     }
 
     function sendNewLevel%.object_id%() {
-        let lamp = window.dimmersCctRGB%.object_id%;
+        let lamp = window.dimmersCctRGB2%.object_id%;
         lamp.dragging = false;
         clearTimeout(lamp.levelTimeout);
         lamp.levelTimeout = setTimeout(() => {
@@ -129,15 +129,15 @@
 	// --- Цветовая температура ---
 	function previewCct%.object_id%(val) {
 		val = parseInt(val);
-		let lamp = window.dimmersCctRGB%.object_id%;
+		let lamp = window.dimmersCctRGB2%.object_id%;
 		lamp.dragging = true;
 		lamp.cct = val;
-		$('#dimmersCctRGB%.object_id%_ccttxt').text("Температура: " + val + "%");
-		updateSliderFill('#dimmersCctRGB%.object_id%_cct', val, '#f7a800');
+		$('#dimmersCctRGB2%.object_id%_ccttxt').text("Температура: " + val + "%");
+		updateSliderFill('#dimmersCctRGB2%.object_id%_cct', val, '#f7a800');
 	}
 
 	function sendNewCct%.object_id%() {
-		let lamp = window.dimmersCctRGB%.object_id%;
+		let lamp = window.dimmersCctRGB2%.object_id%;
 		lamp.dragging = false;
 		clearTimeout(lamp.cctTimeout);
 		lamp.cctTimeout = setTimeout(() => {
@@ -154,8 +154,8 @@
     }
 
     $(document).ready(function() {
-        updateSliderFill('#dimmersCctRGB%.object_id%_level', %.level%, '%.color%');
-        updateSliderFill('#dimmersCctRGB%.object_id%_cct', %.cct%, '#f7a800');
+        updateSliderFill('#dimmersCctRGB2%.object_id%_level', %.level%, '%.color%');
+        updateSliderFill('#dimmersCctRGB2%.object_id%_cct', %.cct%, '#f7a800');
 
     });
 </script>
@@ -212,7 +212,7 @@ input[type=range]::-webkit-slider-thumb:hover {
   transform: scale(1.2);
 }
 
-#dimmersCctRGB%.object_id%_level {
+#dimmersCctRGB2%.object_id%_level {
   color: %.color%;
 }
 
@@ -265,15 +265,15 @@ input[type=range]::-webkit-slider-thumb:hover {
 	<input type="color"  
 		   value="%.color%" 
 		   onchange="sendNewColor%.object_id%(this.value);">
-    <p id="dimmersCctRGB%.object_id%_leveltxt">Яркость: %.level%%</p>
-    <input id="dimmersCctRGB%.object_id%_level" 
+    <p id="dimmersCctRGB2%.object_id%_leveltxt">Яркость: %.level%%</p>
+    <input id="dimmersCctRGB2%.object_id%_level" 
            type="range" min="1" max="100" step="1"
            value="%.level%" 
            oninput="previewLevel%.object_id%(this.value)"
            onmouseup="sendNewLevel%.object_id%()"
            ontouchend="sendNewLevel%.object_id%()"> 
-    <p id="dimmersCctRGB%.object_id%_ccttxt">Температура: %.cct%%</p>
-    <input id="dimmersCctRGB%.object_id%_cct" 
+    <p id="dimmersCctRGB2%.object_id%_ccttxt">Температура: %.cct%%</p>
+    <input id="dimmersCctRGB2%.object_id%_cct" 
            type="range" min="1" max="100" step="1"
            value="%.cct%" 
            oninput="previewCct%.object_id%(this.value)"
@@ -284,6 +284,6 @@ input[type=range]::-webkit-slider-thumb:hover {
 
 <script>
 	// Инициализация фона ползунка и сцен при загрузке
-	updateSliderFill('#dimmersCctRGB%.object_id%_level', %.level%, '%.color%');
-	updateSliderFill('#dimmersCctRGB%.object_id%_cct', %.cct%, '#f7a800');
+	updateSliderFill('#dimmersCctRGB2%.object_id%_level', %.level%, '%.color%');
+	updateSliderFill('#dimmersCctRGB2%.object_id%_cct', %.cct%, '#f7a800');
 </script>

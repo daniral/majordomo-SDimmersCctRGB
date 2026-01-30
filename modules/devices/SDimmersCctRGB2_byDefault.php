@@ -13,15 +13,17 @@
  * @property int     $levelMax         Максимальная рабочая яркость
  * @property int     $cctMin           Минимальная рабочая температура цвета
  * @property int     $cctMax           Максимальная рабочая температура цвета
- *
+ * @property int     $mode             Режим работы (1=цвет, 2=температура)
  * --- Дневной режим ---
  * @property string  $dayLevel         Яркость днём (1–100)
  * @property string  $dayColor         Цвет днём (HEX)
  * @property string  $dayCct           Температура цвета днём (1–100)
+ * @property int     $dayMode          Режим работы днём (1=цвет, 2=температура)
  * --- Ночной режим ---
  * @property string  $nightLevel       Яркость ночью (0–100)
  * @property string  $nightColor       Цвет ночью (HEX)
  * @property string  $nightCct         Температура цвета ночью (1–100)
+ * @property int     $nightMode        Режим работы ночью (1=цвет, 2=температура)
  * --- Автоматизация ---
  * @property string  $timerOff         Время авто-выключения лампы (секунды)
  * @property string  $autoOnOff        Автоматическое управление включением (0/1)

@@ -10,72 +10,60 @@
  * PROPERTIES:
  * ===========================================================
  *
- * @property int    $level          Яркость (1–100). OnChange: propertysUpdated. DataKey.
- * @property int    $levelWork      Рабочая яркость. OnChange: worksUpdated. DataKey.
- * @property int    $levelSaved     Сохраненная яркость.
- * @property int    $levelMaxWork   Максимальная рабочая яркость (config).
- * @property int    $levelMinWork   Минимальная рабочая яркость (config).
- * @property int    $cct            Температура (1–100). OnChange: propertysUpdated. DataKey.
- * @property int    $cctWork        Рабочая теплота.  OnChange: worksUpdated. DataKey.
- * @property int    $cctSaved       Сохраненная теплота.
- * @property int    $cctMaxWork     Максимальная рабочая теплота (config).
- * @property int    $cctMinWork     Минимальная рабочая теплота (config).
- * @property string $color          Текущий цвет ленты (HEX 6 символов).Формат: #RRGGBB или RRGGBB. DataKey. OnChange: propertysUpdated.
- * @property string $colorWork      Рабочий цвет в формате {"x":<value>,"y":<value>}. OnChange: worksUpdated. DataKey.
- * @property string $colorSaved     Последний установленный цвет (HEX 6 символов).
+ * @property int    $level           Яркость (1–100). OnChange: propertysUpdated. DataKey.
+ * @property int    $levelWork       Рабочая яркость. OnChange: worksUpdated. DataKey.
+ * @property int    $levelSaved      Сохраненная яркость.
+ * @property int    $levelMaxWork    Максимальная рабочая яркость (config).
+ * @property int    $levelMinWork    Минимальная рабочая яркость (config).
+ * @property int    $cct             Температура (1–100). OnChange: propertysUpdated. DataKey.
+ * @property int    $cctWork         Рабочая теплота.  OnChange: worksUpdated. DataKey.
+ * @property int    $cctSaved        Сохраненная теплота.
+ * @property int    $cctMaxWork      Максимальная рабочая теплота (config).
+ * @property int    $cctMinWork      Минимальная рабочая теплота (config).
+ * @property string $color           Текущий цвет ленты (HEX 6 символов).Формат: #RRGGBB или RRGGBB. DataKey. OnChange: propertysUpdated.
+ * @property string $colorWork       Рабочий цвет в формате {"x":<value>,"y":<value>}. OnChange: worksUpdated. DataKey.
+ * @property string $colorSaved      Последний установленный цвет (HEX 6 символов).
+ * 
+ * @property int    $mode            Что включать (цвет, температура) (config).
+ * @property int    $dayMode         Что включать днем (цвет, температура) (config).
+ * @property int    $nightMode       Что включать ночью (цвет, температура) (config).
+ * @property int    $autoOnOff       Автовключение (config).
+ * @property int    $timerOff        Выключить через (сек). 0 - не выключать (config).
+ * @property int    $workingDay      Включать (день, ночь, 24 часа) (config).
+ * @property int    $workingBy       Работать по (время, солнце, датчик) (config).
+ * @property string $dayBegin        Начало режима день (hh:mm) (config).	
+ * @property string $nightBegin      Начало режима ночь (hh:mm) (config).
+ * @property string $sunriseTime     Время восхода солнца.
+ * @property string $sunsetTime      Время захода солнца.
+ * @property int    $signSunrise     Восход (прибавить/отнять) (config).
+ * @property string $addTimeSunrise  Часов:Минут (00:00) (config).
+ * @property int    $signSunset      Закат (прибавить/отнять) (config).
+ * @property string $addTimeSunset   Часов:Минут (00:00) (config).
+ * @property int    $illuminanceMax  Макc.освещение (датчик) (config).
+ * @property int    $illuminanceFlag Стопер датчика освещения (config).
+ * @property int    $illuminance     Данные с датчика освещения. DataKey.
+ * @property int    $presence        Данные с датчика присутствия. OnChange: propertysUpdated. DataKey.
+ * @property int    $flag            Стопер запуска авто мода (config).	
  * 
  * ===========================================================
  * METHODS:
  * ===========================================================
  *
- * @method void setLevel(int $value)
- *      Установить уровень яркости (1–100).  
- *      Вызывается через MajorDoMo: 
- *      `callMethod('Объект.setLevel', array("value" => 1–100))`
- *
- * @method void levelUp(int $value = 10)
- *      Увеличить яркость на указанное значение.  
- *      Если параметр $value не передан, используется значение по умолчанию 10.  
- *      Вызывается через MajorDoMo: 
- *      `callMethod('Объект.levelUp', array("value" => 1–100))` или просто 
- *      `callMethod('Объект.levelUp')` для +10.
- *
- * @method void levelDown(int $value = 10)
- *      Уменьшить яркость на указанное значение.  
- *      Если параметр $value не передан, используется значение по умолчанию 10.  
- *      Вызывается через MajorDoMo: 
- *      `callMethod('Объект.levelDown', array("value" => 1–100))` или просто 
- *      `callMethod('Объект.levelDown')` для -10.
- *
- *  * @method void setCct(int $value)
- *      Установить уровень температуры (1–100).  
- *      Вызывается через MajorDoMo: 
- *      `callMethod('Объект.setCct', array("value" => 1–100))`
- *
- * @method void cctUp(int $value = 10)
- *      Увеличить температуру на указанное значение.  
- *      Если параметр $value не передан, используется значение по умолчанию 10.  
- *      Вызывается через MajorDoMo: 
- *      `callMethod('Объект.cctUp', array("value" => 1–100))` или просто 
- *      `callMethod('Объект.cctUp')` для +10.
- *
- * @method void cctDown(int $value = 10)
- *      Уменьшить температуру на указанное значение.  
- *      Если параметр $value не передан, используется значение по умолчанию 10.  
- *      Вызывается через MajorDoMo: 
- *      `callMethod('Объект.cctDown', array("value" => 1–100))` или просто 
- *      `callMethod('Объект.cctDown')` для -10.
- *
-@method void setColor(string $value)
- *      Установить цвет в HEX формате (#RRGGBB или RRGGBB).  
- *      Вызывается через MajorDoMo: 
- *      `callMethod('Объект.setColor', array("value" => "#RRGGBB"))`
- *
- * @method void propertysUpdated()
- *      Вызывается при изменении яркости, цвета или сцены.
- *
- * @method void worksUpdated()
- *      Вызывается при изменении рабочих параметров (colorWork / sceneWork).
+ * @method void turnOn()                Включить устройство
+ * @method void turnOff()               Выключить устройство
+ * @method void switch()                Переключить состояние (вкл/выкл)
+ * @method void setLevel(int $value)    Установить уровень яркости (1–100)
+ * @method void setCct(int $value)      Установить уровень температуры (1–100)
+ * @method void levelUp(int $value)     Увеличить уровень яркости
+ * @method void levelDown(int $value)   Уменьшить уровень яркости
+ * @method void cctUp(int $value)       Увеличить уровень температуры
+ * @method void cctDown(int $value)     Уменьшить уровень температуры
+ * @method void setColor(string $value) Установить цвет в HEX формате (#RRGGBB или RRGGBB).  
+ * @method void propertysUpdated()      Запускается при смене яркости, теплоты, присутствия
+ * @method void worksUpdated()          Запускается при смене рабочей яркости и цвета
+ * @method void byDefault()             Установить свойства по умолчанию
+ * @method void createCommandsMenu()    Создает меню управления
+ * @method void deleteCommandsMenu()    Удаляет меню управления
  */
 
 if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/SDimmersCctRGB2_' . SETTINGS_SITE_LANGUAGE . '.php')) {
@@ -137,6 +125,9 @@ $this->device_types['dimmerCctRGB'] = array(
 		'flag' => array('DESCRIPTION' => 'Стопер запуска авто мода'),
 	),
 	'METHODS' => array(
+		'turnOn' => array('DESCRIPTION' => 'Включить', '_CONFIG_SHOW' => 1),
+		'turnOff' => array('DESCRIPTION' => 'Выключить', '_CONFIG_SHOW' => 1),
+		'switch' => array('DESCRIPTION' => 'Переключить'),
 		'levelUp' => array('DESCRIPTION' => 'Увеличить яркость.', '_CONFIG_SHOW' => 1, '_CONFIG_REQ_VALUE' => 1),
 		'levelDown' => array('DESCRIPTION' => 'Уменьшить яркость.', '_CONFIG_SHOW' => 1, '_CONFIG_REQ_VALUE' => 1),
 		'setLevel' => array('DESCRIPTION' => 'Установить уровень яркости.', '_CONFIG_SHOW' => 1, '_CONFIG_REQ_VALUE' => 1),
@@ -146,5 +137,8 @@ $this->device_types['dimmerCctRGB'] = array(
 		'setColor' => array('DESCRIPTION' => 'Установить цвет(HEX).', '_CONFIG_SHOW' => 1, '_CONFIG_REQ_VALUE' => 1),		
 		'worksUpdated' => array('DESCRIPTION' => 'Запускается при смене рабочих параметров'),
 		'propertysUpdated' => array('DESCRIPTION' => 'Запускается при смене параметров'),
+		'createCommandsMenu' => array('DESCRIPTION' => 'Создает меню управления.', '_CONFIG_SHOW' => 1),
+		'deleteCommandsMenu' => array('DESCRIPTION' => 'Удаляет меню управления.', '_CONFIG_SHOW' => 1),	
+		'byDefault' => array('DESCRIPTION' => 'Метод по умолчанию'),
 	),
 );
