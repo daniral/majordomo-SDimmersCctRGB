@@ -112,4 +112,4 @@ if (is_null($valueToSet)) return;
 
 // Записываем полученное значение в основное свойство и сохраняем
 $this->setProperty(str_replace('Work', '', $property), $valueToSet, 'worksUpdated');
-$this->setProperty(str_replace('Work', '', $property) . 'Saved', $valueToSet);
+//$this->setProperty(str_replace('Work', '', $property) . 'Saved', $valueToSet);

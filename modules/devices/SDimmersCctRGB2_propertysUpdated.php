@@ -63,6 +63,22 @@ if ($source === 'worksUpdated' || is_null($value)) {
     return;
 }
 
+// --- Обработка mode
+if ($property === 'mode') {
+    $this->callMethod('turnOff');
+	sleep (1);
+    $this->callMethod('turnOn');
+    return;
+}
+
+// --- Обработка presence
+if ($property === 'presence') {
+    if ((int)$this->getProperty('timerOff') > 0) {
+        autoOff($this);
+    }
+    return;
+}
+
 // --- Обработка Цвет Яркость Теплота ---
 if ($property === 'color' || $property === 'level' || $property === 'cct') {
     if ($property === 'level' || $property === 'cct') {
@@ -102,9 +118,11 @@ if ($property === 'color' || $property === 'level' || $property === 'cct') {
     if (!$this->getProperty('status')) {
         $this->setProperty('status', 1);
     }
-    
-    // Сохраняем для истории и восстановления
-    $this->setProperty($property . 'Saved', $value);
+
+    if ($source !== 'autoMode') {
+        $this->setProperty('flag', 1);
+        $this->setProperty($property . 'Saved', $value);
+    }
 
     // Синхронизируем значение свойства в MajorDoMo
     if ($value != $this->getProperty($property)) {
